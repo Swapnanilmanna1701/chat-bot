@@ -4,25 +4,29 @@ import './App.css'
 
 function App() {
   const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("")
   async function generateAnswer (){
-    console.log("loading...")
+    setAnswer("loading...")
     const response = await axios({
-      url:`process.env.GEMINI_URL`,
+      url:"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCtA0qBONuzYWCCuknfCw-gPKYnr_H1UA8",
       method: "POST",
       data: {
-        contents:[{"parts":[{"text":"Explain how AI works"}]}]
+        contents:[{"parts":[{"text":question}]}]
         
       }
       
     });
-    console.log(response['data']['candidates'][0]['content']['parts'][0]['text']);
+    setAnswer(response['data']['candidates'][0]['content']['parts'][0]['text']);
 
   }
 
   return (
     <>
       <h1>Chat Bot</h1>
-      <button onClick={generateAnswer}>Generate Answer</button>
+      <textarea value={question} onChange={(e)=> setQuestion(e.target.value)} cols="30" rows='15'></textarea><br></br><br></br>
+      <button onClick={generateAnswer}>Generating...</button>
+      
+      <p>{answer}</p>
     </>
   )
 }
